@@ -1,5 +1,8 @@
 package com.kodluyoruz.mvvmandroid.utils
 
+import android.util.Log
+import com.google.gson.Gson
+import com.kodluyoruz.mvvmandroid.data.entity.common.ErrorResponse
 import retrofit2.Response
 
 abstract class BaseDataSource {
@@ -10,7 +13,8 @@ abstract class BaseDataSource {
                 val body = response.body()
                 if (body != null) return Resource.success(body)
             }
-            return error("${response.code()} - ${response.message()}")
+            val errorBody = response.errorBody().toString()
+            return error("${response.code()} - $errorBody")
         } catch (err: Exception) {
             return error("${err.localizedMessage} - ${err.message}")
         }

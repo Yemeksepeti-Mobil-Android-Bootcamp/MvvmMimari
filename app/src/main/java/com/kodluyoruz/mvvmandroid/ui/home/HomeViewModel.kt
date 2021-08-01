@@ -13,13 +13,8 @@ class HomeViewModel @Inject constructor(
     var apiRepository: ApiRepository
 ) : ViewModel() {
 
-    fun fetchRickMortList(): LiveData<Resource<RickAndMortyBaseResponse>> =
-        apiRepository.getChacracterList()
+//    fun fetchRickMortList(): LiveData<Resource<RickAndMortyBaseResponse>> =
+//        apiRepository.getChacracterList()
 
-    fun changeState() {
-    }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
 }
