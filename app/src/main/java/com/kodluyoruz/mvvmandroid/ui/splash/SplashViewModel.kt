@@ -37,6 +37,8 @@ class SplashViewModel @Inject constructor(
     }
 
     fun checkTokenAndNavigation() {
+        apiRepository.checkUsers()
+
         Firebase.messaging.getToken().addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("PushNotification", "Fetching FCM registration token failed", task.exception)
@@ -45,7 +47,6 @@ class SplashViewModel @Inject constructor(
 
             // Get new FCM registration token
             val token = task.result
-
             // Log and toast
             val msg = "Token: $token"
             Log.d("PushNotification", msg)

@@ -1,13 +1,17 @@
 package com.kodluyoruz.mvvmandroid.ui.home
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.kodluyoruz.mvvmandroid.R
 import com.kodluyoruz.mvvmandroid.databinding.FragmentHomeBinding
+import com.kodluyoruz.mvvmandroid.utils.AuthStateListener
 import com.kodluyoruz.mvvmandroid.utils.Resource
 import com.kodluyoruz.mvvmandroid.utils.gone
 import com.kodluyoruz.mvvmandroid.utils.show
@@ -19,6 +23,11 @@ class HomeFragment : Fragment() {
     private lateinit var _binding: FragmentHomeBinding
 
     private val viewModel: HomeViewModel by viewModels()
+    private var authStateListener: AuthStateListener? = null
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        authStateListener = context as AuthStateListener
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +40,20 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getUserListLiveData().observe(viewLifecycleOwner, Observer { list ->
+            Log.v("HomeFragment", "$list")
+            list.forEach {
+                _binding.homeTextView.text = "${_binding.homeTextView.text}\n ${it.name}"
+            }
+        })
+
+        _binding.logoutButton.setOnClickListener {
+            viewModel.removeToken()
+            authStateListener?.logout()
+        }
+
+        viewModel.listUser()
+
 //        viewModel.fetchRickMortList().observe(viewLifecycleOwner, {
 //            when (it.status) {
 //                Resource.Status.LOADING -> {
